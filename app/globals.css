@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 36 60% 45%;
+    --primary-foreground: 26 83.3% 14.1%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 36 60% 45%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-playfair;
+  }
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea {
+    @apply font-montserrat;
+  }
+}
+
+.hero-gradient {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7)), url("/images/hero-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(184, 134, 11, 0.2);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #e6c566 0%, #b8860b 50%, #d4af37 100%);
+}
+
+.text-gold {
+  background: linear-gradient(to right, #b8860b, #ffd700, #b8860b, #ffd700, #b8860b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-glow {
+  box-shadow: 0 0 15px 5px rgba(184, 134, 11, 0.3);
+}
+
+.gold-hover {
+  transition: all 0.3s ease;
+}
+
+.gold-hover:hover {
+  color: #e6c566;
+  transform: translateY(-2px);
+}

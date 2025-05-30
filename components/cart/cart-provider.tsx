@@ -1,11 +1,12 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { formatMYR } from "@/lib/services/gold-price-service"
 
 export type CartItem = {
   id: string
   name: string
-  price: number
+  priceRM: number
   image: string
   quantity: number
 }
@@ -17,6 +18,7 @@ type CartContextType = {
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   subtotal: number
+  formattedSubtotal: string
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -24,6 +26,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [subtotal, setSubtotal] = useState(0)
+  const [formattedSubtotal, setFormattedSubtotal] = useState("RM0.00")
 
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -42,8 +45,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("cart", JSON.stringify(cartItems))
 
     // Calculate subtotal
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const total = cartItems.reduce((sum, item) => sum + item.priceRM * item.quantity, 0)
     setSubtotal(total)
+    setFormattedSubtotal(formatMYR(total))
   }, [cartItems])
 
   const addToCart = (item: CartItem) => {
@@ -83,6 +87,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         updateQuantity,
         clearCart,
         subtotal,
+        formattedSubtotal,
       }}
     >
       {children}

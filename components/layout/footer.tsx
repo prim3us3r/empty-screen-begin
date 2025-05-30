@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock, Building } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -13,6 +13,13 @@ const Footer = () => {
             <h3 className="text-xl font-playfair font-bold mb-4">
               <span className="text-gold-DEFAULT">GoldJewelsMy</span>
             </h3>
+            <div className="mb-4">
+              <div className="flex items-center mb-2">
+                <Building className="h-4 w-4 mr-2 text-gold-DEFAULT shrink-0" />
+                <span className="text-white/90 font-medium">GJM Trading</span>
+              </div>
+              <p className="text-white/70 text-sm ml-6">(SSM-56834970-A)</p>
+            </div>
             <p className="text-white/70 mb-6 max-w-xs">
               Providing premium gold bars and investment opportunities with unmatched quality and service.
             </p>
@@ -52,13 +59,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-white/70 hover:text-gold-DEFAULT transition-colors">
-                  FAQs
+                <Link href="/refund-policy" className="text-white/70 hover:text-gold-DEFAULT transition-colors">
+                  Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-white/70 hover:text-gold-DEFAULT transition-colors">
-                  Blog
+                <Link href="/privacy" className="text-white/70 hover:text-gold-DEFAULT transition-colors">
+                  Privacy Policy
                 </Link>
               </li>
             </ul>
@@ -70,15 +77,19 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 text-gold-DEFAULT shrink-0 mt-0.5" />
-                <span className="text-white/70">PT 77 Bandar Baru Kubang Kerian 16150 Kota Bharu</span>
+                <span className="text-white/70">Sri Damansara, Kuala Lumpur 52200</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-gold-DEFAULT shrink-0" />
-                <span className="text-white/70">+60176323580</span>
+                <span className="text-white/70">+60172924529</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-gold-DEFAULT shrink-0" />
                 <span className="text-white/70">sales@goldjewelsmy.com</span>
+              </li>
+              <li className="flex items-start">
+                <Clock className="h-5 w-5 mr-2 text-gold-DEFAULT shrink-0 mt-0.5" />
+                <span className="text-white/70">Monday – Friday, 9:00 AM – 6:00 PM</span>
               </li>
             </ul>
           </div>
@@ -100,7 +111,7 @@ const Footer = () => {
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/50 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} GoldJewelsMy. All rights reserved.
+            &copy; {new Date().getFullYear()} GJM Trading (SSM-56834970-A). All rights reserved.
           </p>
           <div className="flex space-x-6">
             <Link href="/privacy" className="text-white/50 text-sm hover:text-gold-DEFAULT transition-colors">
@@ -108,6 +119,9 @@ const Footer = () => {
             </Link>
             <Link href="/terms" className="text-white/50 text-sm hover:text-gold-DEFAULT transition-colors">
               Terms & Conditions
+            </Link>
+            <Link href="/refund-policy" className="text-white/50 text-sm hover:text-gold-DEFAULT transition-colors">
+              Refund Policy
             </Link>
             <Link href="/shipping" className="text-white/50 text-sm hover:text-gold-DEFAULT transition-colors">
               Shipping Policy

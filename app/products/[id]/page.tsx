@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import ProductDetail from "@/components/products/product-detail"
-import { getProductById } from "@/lib/products"
+import { getProductById } from "@/lib/services/product-service"
 
 interface ProductPageProps {
   params: {
@@ -10,22 +10,22 @@ interface ProductPageProps {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = getProductById(params.id)
+  const product = await getProductById(params.id)
 
   if (!product) {
     return {
-      title: "Product Not Found",
+      title: "Product Not Found | GoldJewelsMy",
       description: "The requested product could not be found.",
     }
   }
 
   return {
-    title: `${product.name} | Aurum Gold Bars`,
+    title: `${product.name} | GoldJewelsMy`,
     description: product.description,
     openGraph: {
       images: [
         {
-          url: product.image,
+          url: product.image_url,
           width: 1200,
           height: 630,
           alt: product.name,
@@ -35,8 +35,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = getProductById(params.id)
+export default async function ProductPage({ params }: ProductPageProps) {
+  const product = await getProductById(params.id)
 
   if (!product) {
     notFound()

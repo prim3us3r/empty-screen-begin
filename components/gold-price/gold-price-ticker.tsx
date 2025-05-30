@@ -1,51 +1,81 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { ArrowDown, ArrowUp } from "lucide-react"
-import { formatGoldPrice, getMalaysiaDateTime, simulateGoldPrice } from "@/lib/services/gold-price-service"
+import { useState, useEffect } from "react"
+import { ArrowUp, ArrowDown, Clock } from "lucide-react"
+import { formatMYR, formatUSD, simulateGoldPriceChange, formatMalaysiaDate } from "@/lib/services/gold-price-service"
 
-export default function GoldPriceTicker() {
-  const [goldData, setGoldData] = useState({
-    priceMyrPerGram: 350.75,
-    priceUsd: 2350,
-    change: 0.12,
-    isUp: true,
-    lastUpdated: getMalaysiaDateTime(),
-  })
+const GoldPriceTicker = () => {
+  const [goldPriceRM, setGoldPriceRM] = useState(350.75)
+  const [goldPriceUSD, setGoldPriceUSD] = useState(2350.5)
+  const [percentChange, setPercentChange] = useState(0.25)
+  const [isUp, setIsUp] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState(new Date())
 
   useEffect(() => {
-    // Initial price update
-    updatePrice()
+    // Initial fetch
+    fetchGoldPrice()
 
-    // Update price every 15 seconds
-    const interval = setInterval(updatePrice, 15000)
+    // Update every 15 seconds
+    const interval = setInterval(() => {
+      updateGoldPrice()
+    }, 15000)
+
     return () => clearInterval(interval)
   }, [])
 
-  function updatePrice() {
-    const newData = simulateGoldPrice()
-    setGoldData({
-      ...newData,
-      lastUpdated: getMalaysiaDateTime(),
-    })
+  const fetchGoldPrice = async () => {
+    try {
+      // In a real app, this would fetch from your API
+      // For now, we'll use the simulated data
+      updateGoldPrice()
+    } catch (error) {
+      console.error("Error fetching gold price:", error)
+    }
+  }
+
+  const updateGoldPrice = () => {
+    // Simulate price changes
+    const {
+      newPrice: newPriceRM,
+      percentChange: newPercentChange,
+      isUp: newIsUp,
+    } = simulateGoldPriceChange(goldPriceRM)
+
+    // Update USD price with similar trend
+    const usdChange = goldPriceUSD * (newPercentChange / 100) * (newIsUp ? 1 : -1)
+    const newPriceUSD = goldPriceUSD + usdChange
+
+    setGoldPriceRM(newPriceRM)
+    setGoldPriceUSD(Number.parseFloat(newPriceUSD.toFixed(2)))
+    setPercentChange(newPercentChange)
+    setIsUp(newIsUp)
+    setLastUpdated(new Date())
   }
 
   return (
-    <div className="w-full bg-black border-b border-gold/30 py-1 px-4 text-white text-sm">
-      <div className="container mx-auto flex items-center justify-between">
+    <div className="w-full bg-black border-b border-gold-DEFAULT/30 py-2 px-4 text-white">
+      <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <span className="font-medium text-gold-light">Live Gold Price:</span>
-          <span className="font-bold text-white">{formatGoldPrice(goldData.priceMyrPerGram)} per gram</span>
-          <span className={`flex items-center text-xs ${goldData.isUp ? "text-green-500" : "text-red-500"}`}>
-            {goldData.isUp ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-            {goldData.change}%
+          <span className="font-bold text-gold-DEFAULT">Gold Price:</span>
+          <span className="font-bold">{formatMYR(goldPriceRM)}/g</span>
+          <span className={`flex items-center text-xs ${isUp ? "text-green-500" : "text-red-500"}`}>
+            {isUp ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
+            {percentChange}%
           </span>
         </div>
-        <div className="hidden md:flex items-center space-x-2">
-          <span className="text-xs text-gold-light/70">USD: {formatGoldPrice(goldData.priceUsd, "USD")}/oz</span>
-          <span className="text-xs text-gold-light/70">Last updated: {goldData.lastUpdated}</span>
+
+        <div className="hidden md:flex items-center space-x-4 text-sm text-white/70">
+          <div className="flex items-center">
+            <span className="mr-2">{formatUSD(goldPriceUSD)}/oz</span>
+          </div>
+          <div className="flex items-center">
+            <Clock className="h-3 w-3 mr-1" />
+            <span>Updated: {formatMalaysiaDate(lastUpdated)}</span>
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
+export default GoldPriceTicker

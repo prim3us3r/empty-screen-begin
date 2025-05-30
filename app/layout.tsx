@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Playfair_Display, Montserrat } from "next/font/google"
 import "./globals.css"
+import "./ios-ui.css"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -9,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { CartProvider } from "@/components/cart/cart-provider"
 import GoldPriceTicker from "@/components/gold-price/gold-price-ticker"
 import FixedGoldPriceTicker from "@/components/gold-price/fixed-gold-price-ticker"
+import IosFooterMenu from "@/components/layout/ios-footer-menu"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -69,6 +71,7 @@ export default function RootLayout({
               <FixedGoldPriceTicker />
               <main className="flex-1">{children}</main>
               <Footer />
+              <IosFooterMenu />
             </div>
             <Toaster />
           </CartProvider>

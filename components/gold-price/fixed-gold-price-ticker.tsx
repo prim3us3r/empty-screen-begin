@@ -1,59 +1,63 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { ArrowDown, ArrowUp } from "lucide-react"
-import { formatGoldPrice, simulateGoldPrice } from "@/lib/services/gold-price-service"
+import { useState, useEffect } from "react"
+import { ArrowUp, ArrowDown } from "lucide-react"
+import { formatMYR, simulateGoldPriceChange } from "@/lib/services/gold-price-service"
 
-export default function FixedGoldPriceTicker() {
-  const [goldData, setGoldData] = useState({
-    priceMyrPerGram: 350.75,
-    change: 0.12,
-    isUp: true,
-  })
-
-  const [isVisible, setIsVisible] = useState(false)
+const FixedGoldPriceTicker = () => {
+  const [goldPriceRM, setGoldPriceRM] = useState(350.75)
+  const [percentChange, setPercentChange] = useState(0.25)
+  const [isUp, setIsUp] = useState(true)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    // Share data with the main ticker
-    const updatePrice = () => {
-      const newData = simulateGoldPrice()
-      setGoldData({
-        priceMyrPerGram: newData.priceMyrPerGram,
-        change: newData.change,
-        isUp: newData.isUp,
-      })
-    }
+    // Initial fetch
+    updateGoldPrice()
 
-    // Update price every 15 seconds
-    updatePrice()
-    const interval = setInterval(updatePrice, 15000)
+    // Update every 15 seconds
+    const priceInterval = setInterval(() => {
+      updateGoldPrice()
+    }, 15000)
 
-    // Show the fixed ticker after scrolling down
+    // Handle scroll events to show/hide the fixed ticker
     const handleScroll = () => {
-      setIsVisible(window.scrollY > 100)
+      // Show the fixed ticker when scrolled past the main ticker (approx 100px)
+      setVisible(window.scrollY > 100)
     }
 
     window.addEventListener("scroll", handleScroll)
+
     return () => {
-      clearInterval(interval)
+      clearInterval(priceInterval)
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
-  if (!isVisible) return null
+  const updateGoldPrice = () => {
+    // Simulate price changes
+    const { newPrice, percentChange: newPercentChange, isUp: newIsUp } = simulateGoldPriceChange(goldPriceRM)
+
+    setGoldPriceRM(newPrice)
+    setPercentChange(newPercentChange)
+    setIsUp(newIsUp)
+  }
+
+  if (!visible) return null
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-sm border-b border-gold/30 py-1 px-4 text-white text-sm shadow-md animate-slideDown">
-      <div className="container mx-auto flex items-center justify-center">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gold-DEFAULT/30 py-1.5 px-4 text-white animate-slideDown">
+      <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <span className="font-medium text-gold-light">Gold:</span>
-          <span className="font-bold text-white">{formatGoldPrice(goldData.priceMyrPerGram)}/g</span>
-          <span className={`flex items-center text-xs ${goldData.isUp ? "text-green-500" : "text-red-500"}`}>
-            {goldData.isUp ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-            {goldData.change}%
+          <span className="text-sm font-bold text-gold-DEFAULT">Gold:</span>
+          <span className="text-sm font-bold">{formatMYR(goldPriceRM)}/g</span>
+          <span className={`flex items-center text-xs ${isUp ? "text-green-500" : "text-red-500"}`}>
+            {isUp ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
+            {percentChange}%
           </span>
         </div>
       </div>
     </div>
   )
 }
+
+export default FixedGoldPriceTicker
